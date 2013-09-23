@@ -2,7 +2,6 @@
   'targets': [
     {
       'target_name': 'liblua',
-      'type': 'shared_library',
       'sources': [
         'src/lapi.c',
         'src/lcode.c',
@@ -38,15 +37,25 @@
         '.',
         '<(DEPTH)/third_party/lua/src',
       ],
-      'defines': [
-        '_WIN32',
-        'LUA_BUILD_AS_DLL',
-      ],
       'direct_dependent_settings': {
         'include_dirs': [
           '<(DEPTH)/third_party/lua/src',
         ],
       },
+      'conditions': [
+        ['OS == "win"', {
+          'type': 'shared_library',
+          'defines': [
+            '_WIN32',
+            'LUA_BUILD_AS_DLL',
+          ],
+        }, {
+          'type': 'static_library',
+          'defines': [
+            'LUA_USE_LINUX',
+          ],
+        }]
+      ]
     },
     {
       'target_name': 'lua',
