@@ -66,6 +66,12 @@
       'dependencies': [
         'liblua',
       ],
+      'conditions': [
+        ['OS == "linux"', {
+          'defines': [ 'LUA_USE_DLOPEN'],
+          'ldflags': ['-ldl'],
+        }]
+      ]
     },
     {
       'target_name': 'luac',
