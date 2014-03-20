@@ -2,6 +2,7 @@
   'targets': [
     {
       'target_name': 'liblua',
+      'type': 'shared_library',
       'sources': [
         'src/lapi.c',
         'src/lcode.c',
@@ -44,17 +45,29 @@
       },
       'conditions': [
         ['OS == "win"', {
-          'type': 'shared_library',
           'defines': [
             '_WIN32',
             'LUA_BUILD_AS_DLL',
           ],
-        }, {
-          'type': 'static_library',
+        }],
+        ['OS == "linux"', {
           'defines': [
             'LUA_USE_LINUX',
           ],
-        }]
+          'product_prefix': '',
+          'cflags!': ['-fvisibility=hidden'],
+          'ldflags': ['-ldl'],
+        }],
+        ['OS == "mac"', {
+          'defines': [
+            'LUA_USE_LINUX',
+          ],
+          'product_prefix': '',
+          'product_extension': 'so',
+          'xcode_settings': {
+            'GCC_SYMBOLS_PRIVATE_EXTERN': 'NO',
+          }
+        }],
       ]
     },
     {
